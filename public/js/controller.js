@@ -4,8 +4,7 @@ import { GET_JSON } from "./helpers.js";
 import { SHORTEN_STRING } from "./helpers.js";
 import { CONSTRUCT_URL_PART } from "./helpers.js";
 import TrackView from "./view/trackView.js";
-
-detailsModel.loadTrackDetail("738920d3-c6e6-41c7-b504-57761bb625fd");
+import CoverView from "./view/coverView.js";
 
 let searchResults = [];
 let idNbr;
@@ -30,7 +29,6 @@ CONSTANTS.SEARCH_BUTTON.addEventListener("click", function () {
   CONSTANTS.PARENT_ELEMENT.innerHTML = "";
   currentSearch = CONSTANTS.SEARCH_FIELD_VALUE.value;
   constructedURL = CONSTRUCT_URL_PART(searchFilterInput, currentSearch);
-  console.log(constructedURL);
   loadSearchResults(CONSTANTS.PARENT_ELEMENT, startingPoint, limit);
 });
 
@@ -86,11 +84,6 @@ const loadSearchResults = async function (parent, start, maxResults) {
         `${CONSTANTS.API_URL}?query=${constructedURL}&fmt=json&limit=${maxResults}&offset=${start}`
       )
     );
-    console.log(
-      encodeURI(
-        `${CONSTANTS.API_URL}?query=${constructedURL}&fmt=json&limit=${maxResults}&offset=${start}`
-      )
-    );
     totalResults = data.count;
     CONSTANTS.RESULT_COUNT_MESSAGE.classList.remove("hidden");
     CONSTANTS.RESULT_COUNT_MESSAGE.classList.add("flex");
@@ -117,7 +110,6 @@ const loadSearchResults = async function (parent, start, maxResults) {
           : "",
       };
     });
-    console.log(searchResults);
     startingPoint += maxResults;
 
     function generateMarkUp(data) {
@@ -158,6 +150,7 @@ const loadSearchResults = async function (parent, start, maxResults) {
     const trackDetailsBtn = document.querySelectorAll(".view-track-details");
     trackDetailsBtn.forEach(function (trackDetailBtn) {
       trackDetailBtn.addEventListener("click", function () {
+        CONSTANTS.VIEW_COVERS.style.display = "block";
         const trackToShow = trackDetailBtn.id;
         controlTrackDetail(trackToShow);
       });
@@ -224,17 +217,42 @@ function scrollLoad() {
 
 const controlTrackDetail = async function (trackID) {
   try {
+    CoverView.clear();
+
     TrackView.renderSpinner();
 
     await detailsModel.loadTrackDetail(trackID);
 
-    // 2) Rendering Recipe
     TrackView.render(detailsModel.details.trackDetails);
+
+    CONSTANTS.VIEW_COVERS.addEventListener("click", function (ev) {
+      console.log(detailsModel.details.coverUrlArray);
+      CoverView.renderCovers(detailsModel.details.coverUrlArray);
+      ev.target.style.display = "none";
+    });
   } catch (err) {
     console.log(err);
   }
 };
+/*
+const controlCovers = async function (trackID) {
+  try {
+    CoverView.renderSpinner();
+
+    await detailsModel.loadCovers(trackID);
+
+    CoverView.renderCovers(detailsModel.details.coverUrlArray);
+  } catch (err) {
+    console.log(err);
+  }
+};*/
 
 CONSTANTS.CLOSE_MODAL.addEventListener("click", function () {
-  CONSTANTS.MODAL_WINDOW.classList.toggle("hidden");
+  CONSTANTS.MODAL_WINDOW.classList.add("hidden");
+});
+
+document.addEventListener("keydown", function (event) {
+  if (event.key === "Escape") {
+    CONSTANTS.MODAL_WINDOW.classList.add("hidden");
+  }
 });

@@ -10,4 +10,5 @@ export const CONSTANTS = {
   RESULT_COUNT_MESSAGE: document.getElementById("result-count"),
   MODAL_WINDOW: document.getElementById("modal-details"),
   CLOSE_MODAL: document.getElementById("close-modal"),
+  VIEW_COVERS: document.getElementById("view-covers"),
 };

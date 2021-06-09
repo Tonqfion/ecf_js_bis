@@ -11,6 +11,7 @@ export const details = {
   trackDetails: {},
   artistDetails: {},
   releaseDetails: {},
+  coverUrlArray: [],
 };
 
 export const loadTrackDetail = async function (id) {
@@ -20,20 +21,7 @@ export const loadTrackDetail = async function (id) {
         `${CONSTANTS.API_URL}${id}?inc=genres+artists+ratings+releases&fmt=json`
       )
     );
-    /* Première méthode pour "nettoyer" les releases
-    const releasesReduced = [];
-    const titleNotExist = (title) => {
-      return releasesReduced.every((release) => {
-        if (release.title === title) return false;
-        return true;
-      });
-    };
-    trackData["releases"].forEach((release) => {
-      if (titleNotExist(release.title))
-        releasesReduced.push({ id: release.id, title: release.title });
-    });
-    */
-
+    details.coverUrlArray = [];
     details.trackDetails = {
       trackTitle: trackData.title ?? "No title provided",
       trackID: trackData.id,
@@ -47,13 +35,44 @@ export const loadTrackDetail = async function (id) {
       trackReleasesBase: trackData["releases"].length
         ? trackData["releases"]
         : "No information on releases",
-      trackReleasesCleanOne: trackData["releases"].length
-        ? trackData["releases"].map((release) => ({
-            id: release.id,
-            title: release.title,
-          }))
+      trackReleasesIdArray: trackData["releases"].length
+        ? trackData["releases"].map((release) => release.id)
         : "No information on releases",
-      /*
+      trackGenres: trackData["genres"].length
+        ? trackData["genres"]
+        : "No information on genres",
+      trackRating: trackData.rating.value ?? "No rating yet",
+    };
+    details.trackDetails.trackReleasesIdArray.forEach((id) => {
+      unqReleaseCoversUrl(id);
+    });
+    //console.log(details.coverUrlArray);
+  } catch (err) {
+    throw err;
+  }
+};
+
+/*
+
+*/
+
+const unqReleaseCoversUrl = async function (mbid) {
+  try {
+    const coverData = await GET_JSON(
+      encodeURI(`${CONSTANTS.COVER_API_URL}${mbid}`)
+    );
+    console.log(coverData.images);
+    coverData.images.forEach((image) => {
+      image.thumbnails.large
+        ? details.coverUrlArray.push(image.thumbnails.large)
+        : null;
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+/*
         .reduce((accumulator, currentValue, currentIndex, sourceArray) => {
           if (!accumulator.find((a) => a.title === currentValue.title)) {
             accumulator.push(currentValue);
@@ -62,30 +81,21 @@ export const loadTrackDetail = async function (id) {
           return accumulator;
         }, []),
         */
-      /*
+/*
       trackReleasesCleanTwo: releasesReduced,
       */
-      trackGenres: trackData["genres"].length
-        ? trackData["genres"]
-        : "No information on genres",
-      trackRating: trackData.rating.value ?? "No rating yet",
+
+/* Première méthode pour "nettoyer" les releases
+    const releasesReduced = [];
+    const titleNotExist = (title) => {
+      return releasesReduced.every((release) => {
+        if (release.title === title) return false;
+        return true;
+      });
     };
+    trackData["releases"].forEach((release) => {
+      if (titleNotExist(release.title))
+        releasesReduced.push({ id: release.id, title: release.title });
+    });
 
-    console.log(details.trackDetails);
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const loadReleaseCovers = async function (mbid) {
-  try {
-    const coverData = await GET_JSON(
-      encodeURI(`${CONSTANTS.COVER_API_URL}${mbid}`)
-    );
-    console.log(coverData);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-loadReleaseCovers("76df3287-6cda-33eb-8e9a-044b5e15ffdd");
+    */
