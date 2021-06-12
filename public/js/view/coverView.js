@@ -15,18 +15,26 @@ class CoverView {
 
   generateError() {
     return `      
-    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title">
-    No images for any of this track release.
+    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
+    No image could be loaded for this track release
   </h2>`;
   }
 
   generateMarkup() {
     return `      
-    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title">
+    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
     Cover arts
-  </h2>
-  <div class="flex flex-row flex-wrap">
-  ${this.data.map((url) => `<div class="w-24"><img src=${url}></div>`).join("")}
+  </h2>      
+  <h3 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
+  Click on a cover to see its full size if available
+</h3>
+  <div class="flex flex-row flex-wrap overflow-y-auto max-h-96">
+  ${this.data
+    .map(
+      (url) =>
+        `<div class="m-2 w-36 flex items-center justify-center"><a href="${url.originalUrl}" class="spotlight"><img src=${url.thumbnailUrl} class="shadow-lg rounded max-w-full h-auto border-none"></a></div>`
+    )
+    .join("")}
 </div>
       `;
   }
@@ -36,7 +44,11 @@ class CoverView {
   }
 
   renderSpinner() {
-    const markup = `<div class="mx-auto flex-col justify-center	items-center"><svg
+    const markup = `
+    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title">
+    Please wait while the software is looking for cover arts
+  </h2>
+  <div class="mt-16 flex justify-center items-center flex-row flex-wrap overflow-y-auto max-h-96"><svg
     class="animate-spin ml-1 mr-3 h-5 w-5 text-blue-800"
     xmlns="http://www.w3.org/2000/svg"
     fill="none"

@@ -150,7 +150,6 @@ const loadSearchResults = async function (parent, start, maxResults) {
     const trackDetailsBtn = document.querySelectorAll(".view-track-details");
     trackDetailsBtn.forEach(function (trackDetailBtn) {
       trackDetailBtn.addEventListener("click", function () {
-        CONSTANTS.VIEW_COVERS.style.display = "block";
         const trackToShow = trackDetailBtn.id;
         controlTrackDetail(trackToShow);
       });
@@ -224,12 +223,14 @@ const controlTrackDetail = async function (trackID) {
     await detailsModel.loadTrackDetail(trackID);
 
     TrackView.render(detailsModel.details.trackDetails);
-
-    CONSTANTS.VIEW_COVERS.addEventListener("click", function (ev) {
-      console.log(detailsModel.details.coverUrlArray);
+    console.log(detailsModel.details.coverUrlArray);
+    /*
+    CoverView.renderSpinner();
+    setTimeout(function () {
       CoverView.renderCovers(detailsModel.details.coverUrlArray);
-      ev.target.style.display = "none";
-    });
+      console.log(detailsModel.details.coverUrlArray);
+    }, 3000);
+    */
   } catch (err) {
     console.log(err);
   }
