@@ -234,6 +234,20 @@ function scrollLoad() {
     }
   }
 }
+/*
+const controlSearchResults = async function (searchRequest) {
+  try {
+    SearchView.clear();
+    SearchView.renderSpinner();
+    await searchModel.loadSearchResults(searchRequest);
+    SearchView.renderResultCount();
+    SearchView.renderSearchResults();
+    SearchView.renderEndResults();
+  } catch (err) {
+    console.log(err);
+  }
+};
+*/
 
 //https://musicbrainz.org/ws/2/recording/bd44e72c-efaf-47c3-b284-5da787d02583?inc=genres+artists+ratings&fmt=json
 
@@ -248,18 +262,6 @@ const controlTrackDetail = async function (trackID) {
     console.log(err);
   }
 };
-/*
-const controlCovers = async function (trackID) {
-  try {
-    CoverView.renderSpinner();
-
-    await detailsModel.loadCovers(trackID);
-
-    CoverView.renderCovers(detailsModel.details.coverUrlArray);
-  } catch (err) {
-    console.log(err);
-  }
-};*/
 
 CONSTANTS.CLOSE_MODAL.addEventListener("click", function () {
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");

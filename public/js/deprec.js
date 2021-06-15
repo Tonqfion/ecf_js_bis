@@ -109,3 +109,16 @@ export const fetchCovers = async function (urlArray) {
     })
 
 */
+// Test controlCovers
+/*
+const controlCovers = async function (trackID) {
+  try {
+    CoverView.renderSpinner();
+
+    await detailsModel.loadCovers(trackID);
+
+    CoverView.renderCovers(detailsModel.details.coverUrlArray);
+  } catch (err) {
+    console.log(err);
+  }
+};*/
