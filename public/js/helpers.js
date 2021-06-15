@@ -48,3 +48,15 @@ export function CONVERT_MILLIS_TO_MINS_SECONDS(tracklength) {
   let seconds = ((tracklength % 60000) / 1000).toFixed(0);
   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 }
+
+export function INIT() {
+  CONSTANTS.SEARCH_FIELD.focus();
+  CONSTANTS.MODAL_WINDOW.classList.add("hidden");
+  CONSTANTS.PARENT_ELEMENT.innerHTML = "";
+  CONSTANTS.SEARCH_FIELD.value = "";
+  CONSTANTS.NEW_SEARCH.classList.add("hidden");
+  CONSTANTS.RESULT_COUNT_MESSAGE.classList.add("hidden");
+  CONSTANTS.RESULT_MESSAGE.innerHTML = `
+  <p class="font-bold italic text-center text-blue-800">Start searching...</p>
+`;
+}

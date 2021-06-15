@@ -1,8 +1,10 @@
 import { CONSTANTS } from "./config.js";
-import * as detailsModel from "./detailsModel.js";
+import * as detailsModel from "./models/detailsModel.js";
+import * as searchModel from "./models/searchModel.js";
 import { GET_JSON } from "./helpers.js";
 import { SHORTEN_STRING } from "./helpers.js";
 import { CONSTRUCT_URL_PART } from "./helpers.js";
+import { INIT } from "./helpers.js";
 import TrackView from "./view/trackView.js";
 import CoverView from "./view/coverView.js";
 
@@ -15,6 +17,18 @@ let totalResults;
 let searchFilterInput = CONSTANTS.SEARCH_FILTER.value;
 let constructedURL;
 
+INIT();
+
+function startSearchHandler() {
+  CONSTANTS.NEW_SEARCH.classList.remove("hidden");
+  startingPoint = 0;
+  idNbr = 1;
+  CONSTANTS.PARENT_ELEMENT.innerHTML = "";
+  currentSearch = CONSTANTS.SEARCH_FIELD.value;
+  constructedURL = CONSTRUCT_URL_PART(searchFilterInput, currentSearch);
+  loadSearchResults(CONSTANTS.PARENT_ELEMENT, startingPoint, limit);
+}
+
 CONSTANTS.SEARCH_FILTER.addEventListener("input", function (ev) {
   ev.preventDefault();
   searchFilterInput = ev.target.value;
@@ -22,15 +36,24 @@ CONSTANTS.SEARCH_FILTER.addEventListener("input", function (ev) {
 });
 
 // Event listener au clic et à la touche entrée pour initialiser la première recherche
-CONSTANTS.SEARCH_BUTTON.addEventListener("click", function () {
-  // J'initialise (ou réinitialise) ma recherche en mettant l'offset (startingPoint) à 0, en relançant le compteur de résultats (affichage uniquement) et en vidant la grille de résultat
-  startingPoint = 0;
-  idNbr = 1;
-  CONSTANTS.PARENT_ELEMENT.innerHTML = "";
-  currentSearch = CONSTANTS.SEARCH_FIELD_VALUE.value;
-  constructedURL = CONSTRUCT_URL_PART(searchFilterInput, currentSearch);
-  loadSearchResults(CONSTANTS.PARENT_ELEMENT, startingPoint, limit);
+CONSTANTS.SEARCH_BUTTON.addEventListener("click", startSearchHandler);
+CONSTANTS.SEARCH_FIELD.addEventListener("keypress", function (ev) {
+  if (ev.key === "Enter") {
+    startSearchHandler();
+  }
 });
+
+CONSTANTS.SEARCH_FILTER.addEventListener("keypress", function (ev) {
+  if (ev.key === "Enter") {
+    startSearchHandler();
+  }
+});
+
+CONSTANTS.NEW_SEARCH.addEventListener("click", () => {
+  INIT();
+  document.removeEventListener("scroll", scrollLoad);
+});
+// J'initialise (ou réinitialise) ma recherche en mettant l'offset (startingPoint) à 0, en relançant le compteur de résultats (affichage uniquement) et en vidant la grille de résultat
 
 // export const loadDetail = async function (id) {
 //   try {
@@ -219,18 +242,8 @@ const controlTrackDetail = async function (trackID) {
     CoverView.clear();
 
     TrackView.renderSpinner();
-
     await detailsModel.loadTrackDetail(trackID);
-
     TrackView.render(detailsModel.details.trackDetails);
-    console.log(detailsModel.details.coverUrlArray);
-    /*
-    CoverView.renderSpinner();
-    setTimeout(function () {
-      CoverView.renderCovers(detailsModel.details.coverUrlArray);
-      console.log(detailsModel.details.coverUrlArray);
-    }, 3000);
-    */
   } catch (err) {
     console.log(err);
   }
@@ -252,8 +265,8 @@ CONSTANTS.CLOSE_MODAL.addEventListener("click", function () {
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");
 });
 
-document.addEventListener("keydown", function (event) {
-  if (event.key === "Escape") {
+document.addEventListener("keydown", function (ev) {
+  if (ev.key === "Escape") {
     CONSTANTS.MODAL_WINDOW.classList.add("hidden");
   }
 });

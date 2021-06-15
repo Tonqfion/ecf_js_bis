@@ -4,13 +4,22 @@ class CoverView {
   renderCovers(data) {
     this.data = data;
     let markup;
-    if (data.length > 0) {
+    if (data.length > 0 && Array.isArray(data)) {
       markup = this.generateMarkup();
-    } else {
+    } else if (data.length == 0 && Array.isArray(data)) {
       markup = this.generateError();
+    } else {
+      markup = this.generateErrorNoRelease();
     }
     this.clear();
     this.parentElement.insertAdjacentHTML("beforeend", markup);
+  }
+
+  generateErrorNoRelease() {
+    return `      
+    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
+    No release were found so cover art could not be loaded
+  </h2>`;
   }
 
   generateError() {
