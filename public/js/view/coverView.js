@@ -1,6 +1,7 @@
-class CoverView {
+import View from "./view.js";
+
+class CoverView extends View {
   parentElement = document.getElementById("covers-content");
-  data;
   renderCovers(data) {
     this.data = data;
     let markup;
@@ -9,23 +10,23 @@ class CoverView {
     } else if (data.length == 0 && Array.isArray(data)) {
       markup = this.generateError();
     } else {
-      markup = this.generateErrorNoRelease();
+      markup = this.generateErrorNoInfo();
     }
     this.clear();
     this.parentElement.insertAdjacentHTML("beforeend", markup);
   }
 
-  generateErrorNoRelease() {
+  generateErrorNoInfo() {
     return `      
     <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
-    No release were found so cover art could not be loaded
+    No release were found. Cover arts could not be loaded
   </h2>`;
   }
 
   generateError() {
     return `      
     <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
-    No image could be loaded for this track release
+    No image were found for any of this track releases
   </h2>`;
   }
 
@@ -34,10 +35,10 @@ class CoverView {
     <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
     Cover arts
   </h2>      
-  <h3 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title mb-4">
+  <h3 class="text-2xl leading-6 font-medium text-gray-600 mb-8" id="modal-title">
   Click on a cover to see its full size if available
 </h3>
-  <div class="flex flex-row flex-wrap overflow-y-auto max-h-96">
+  <div class="flex flex-row flex-wrap max-h-96 overflow-y-scroll">
   ${this.data
     .map(
       (url) =>
@@ -48,13 +49,9 @@ class CoverView {
       `;
   }
 
-  clear() {
-    this.parentElement.innerHTML = "";
-  }
-
   renderSpinner() {
     const markup = `
-    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900" id="modal-title">
+    <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900 mb-8" id="modal-title">
     Please wait while the software is looking for cover arts
   </h2>
   <div class="mt-16 flex justify-center items-center flex-row flex-wrap overflow-y-auto max-h-96"><svg

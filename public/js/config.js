@@ -1,5 +1,5 @@
 export const CONSTANTS = {
-  API_URL: "https://musicbrainz.org/ws/2/recording/",
+  API_URL: "https://musicbrainz.org/ws/2/",
   COVER_API_URL: "https://coverartarchive.org/release/",
   TIMEOUT_SEC: 10,
   SEARCH_FIELD: document.getElementById("search-input"),
@@ -11,4 +11,5 @@ export const CONSTANTS = {
   RESULT_COUNT_MESSAGE: document.getElementById("result-count"),
   MODAL_WINDOW: document.getElementById("modal-details"),
   CLOSE_MODAL: document.getElementById("close-modal"),
+  HEADER: document.querySelector("header"),
 };

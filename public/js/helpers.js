@@ -59,4 +59,19 @@ export function INIT() {
   CONSTANTS.RESULT_MESSAGE.innerHTML = `
   <p class="font-bold italic text-center text-blue-800">Start searching...</p>
 `;
+  CONSTANTS.HEADER.classList.remove("pt-16");
+}
+
+export function REMOVEDUPLICATES(array) {
+  var prims = { boolean: {}, number: {}, string: {} },
+    objs = [];
+
+  return array.filter(function (item) {
+    var type = typeof item;
+    if (type in prims)
+      return prims[type].hasOwnProperty(item)
+        ? false
+        : (prims[type][item] = true);
+    else return objs.indexOf(item) >= 0 ? false : objs.push(item);
+  });
 }

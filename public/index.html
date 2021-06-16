@@ -6,11 +6,15 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+
 	<link rel="preconnect" href="https://fonts.gstatic.com" />
 	<link
 		href="https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
 		rel="stylesheet" />
 	<link rel="stylesheet" href="styles.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+		integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 	<title>La JAVAPI</title>
 </head>
@@ -44,7 +48,9 @@
       From: "opacity-100"
       To: "opacity-0"
   -->
-			<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+			<div id="modal-background" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+				aria-hidden="true">
+			</div>
 
 			<!-- This element is to trick the browser into centering the modal contents. -->
 			<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
@@ -60,7 +66,7 @@
       To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
   -->
 			<div
-				class="max-w-4xl inline-block align-bottom bg-white rounded-lg text-left overflow-y-auto shadow-xl transform transition-all sm:my-8 sm:align-middle w-full">
+				class="max-w-4xl inline-block align-bottom bg-white rounded-lg text-left overflow-x-hidden shadow-xl transform transition-all lg:my-16 sm:my-8 sm:align-middle w-full">
 				<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">
 					<div id="modal-content" class="flex-col items-center justify-center">
 						<div id="details-content" class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
