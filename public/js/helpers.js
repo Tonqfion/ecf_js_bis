@@ -39,7 +39,7 @@ export function CONSTRUCT_URL_PART(searchType, query) {
   } else if (searchType === "release-opt") {
     return `release:"${query}"`;
   } else {
-    return `recording:"${query}" OR release:"${query}" OR artist:"${query}" OR artistname:"${query}"`;
+    return `${query}`;
   }
 }
 
@@ -74,4 +74,43 @@ export function REMOVEDUPLICATES(array) {
         : (prims[type][item] = true);
     else return objs.indexOf(item) >= 0 ? false : objs.push(item);
   });
+}
+
+//below taken from http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
+export function GETSCROLLXY() {
+  var scrOfX = 0,
+    scrOfY = 0;
+  if (typeof window.pageYOffset == "number") {
+    //Netscape compliant
+    scrOfY = window.pageYOffset;
+    scrOfX = window.pageXOffset;
+  } else if (
+    document.body &&
+    (document.body.scrollLeft || document.body.scrollTop)
+  ) {
+    //DOM compliant
+    scrOfY = document.body.scrollTop;
+    scrOfX = document.body.scrollLeft;
+  } else if (
+    document.documentElement &&
+    (document.documentElement.scrollLeft || document.documentElement.scrollTop)
+  ) {
+    //IE6 standards compliant mode
+    scrOfY = document.documentElement.scrollTop;
+    scrOfX = document.documentElement.scrollLeft;
+  }
+  return [scrOfX, scrOfY];
+}
+
+//taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
+export function GETDOCHEIGHT() {
+  var D = document;
+  return Math.max(
+    D.body.scrollHeight,
+    D.documentElement.scrollHeight,
+    D.body.offsetHeight,
+    D.documentElement.offsetHeight,
+    D.body.clientHeight,
+    D.documentElement.clientHeight
+  );
 }

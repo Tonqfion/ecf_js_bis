@@ -122,3 +122,30 @@ const controlCovers = async function (trackID) {
     console.log(err);
   }
 };*/
+
+/*
+    const trackDetailsBtn = document.querySelectorAll(".view-track-details");
+    trackDetailsBtn.forEach(function (trackDetailBtn) {
+      trackDetailBtn.addEventListener("click", function () {
+        const trackToShow = trackDetailBtn.id;
+        controlTrackDetail(trackToShow);
+      });
+    });
+
+    const artistDetailsBtn = document.querySelectorAll(".view-artist-details");
+    artistDetailsBtn.forEach(function (artistDetailsBtn) {
+      artistDetailsBtn.addEventListener("click", function () {
+        const artistToShow = artistDetailsBtn.id;
+        controlArtistDetail(artistToShow);
+      });
+    });
+    
+
+    const artistDetailsBtn = document.querySelectorAll(".view-artist-details");
+    artistDetailsBtn.forEach(function (artistDetailsBtn) {
+      artistDetailsBtn.addEventListener("click", function () {
+        const artistToShow = artistDetailsBtn.id;
+        controlArtistDetail(artistToShow);
+      });
+    });
+*/

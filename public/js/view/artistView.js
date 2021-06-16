@@ -6,7 +6,11 @@ class ArtistView extends View {
     ${this.data.artistName}
   </h2>
   <div class="mt-2">
-  <h3 class="mt-2 text-xl text-gray-900">Begin Date / End Date</h3>
+  <h3 class="mt-2 text-xl text-gray-900">Artist Type</h3>
+  <p class="border-b-2 pb-2">
+  ${this.data.artistType}
+  </p>
+  <h3 class="mt-2 text-xl text-gray-900">Track List</h3>
   <p class="border-b-2 pb-2">
   ${this.data.artistStartDate} / ${this.data.artistEndDate}
   </p>
@@ -19,12 +23,3 @@ class ArtistView extends View {
 }
 
 export default new ArtistView();
-
-/*
-    <h3 class="mt-2 text-xl text-gray-900">Artist releases</h3>
-    <p class="border-b-2 pb-2">
-      ${this.data.artistReleases
-        .map((release) => release.title + " - " + release.date)
-        .join(" <br> ")}
-    </p>
-*/

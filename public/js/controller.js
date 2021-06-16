@@ -1,10 +1,18 @@
+// J'importe ce dont j'ai besoin pour la suite
+
 import { CONSTANTS } from "./config.js";
 import * as model from "./models/model.js";
-import * as helpers from "./helpers.js";
+import * as HELPERS from "./helpers.js";
 import TrackView from "./view/trackView.js";
 import CoverView from "./view/coverView.js";
 import ArtistView from "./view/artistView.js";
+import ReleaseView from "./view/releaseView.js";
 
+/** Jusque la ligne XXX, j'avais pas pensé à tester un embryon de MVC.
+ * C'est pour ça que plein de trucs qui devraient pas se trouver sur le fichier controller. Mais ça devient mieux après.
+ */
+
+/** J'initalise mes variables */
 let searchResults = [];
 let idNbr;
 let currentSearch;
@@ -14,8 +22,24 @@ let totalResults;
 let searchFilterInput = CONSTANTS.SEARCH_FILTER.value;
 let constructedURL;
 
-helpers.INIT();
+/**J'utilise ma fonction d'initialisation au chargement du script "au cas où" */
+HELPERS.INIT();
 
+/** J'enregistre la valeur du filtre dans une variable à chaque input */
+CONSTANTS.SEARCH_FILTER.addEventListener("input", function (ev) {
+  ev.preventDefault();
+  searchFilterInput = ev.target.value;
+  console.log(searchFilterInput);
+});
+
+/** Je crée ma fonction qui se lance quand on commence une recherche
+ * 1 - J'affiche le bouton pour commencer une nouvelle recherche (en haut en fixed) et je décale le header pour que l'on voit le logo
+ * 2 - J'initialise mon starting point à 0 (qui sera l'offset) et l'idNbr (qui affiche le "numéro" de la piste)
+ * 3 - Je vide le parent element (le container des résultats)
+ * 4 - J'enregistre la valeur dans le champs de recherche
+ * 5 - J'enregistre une partie de la future URL à partir de ce qui se trouve dans le menu déroulant et du champs de recherche
+ * 6 - Je lance la fonction de chargement des résultats
+ */
 function startSearchHandler() {
   CONSTANTS.NEW_SEARCH.classList.remove("hidden");
   CONSTANTS.HEADER.classList.add("pt-16");
@@ -23,57 +47,9 @@ function startSearchHandler() {
   idNbr = 1;
   CONSTANTS.PARENT_ELEMENT.innerHTML = "";
   currentSearch = CONSTANTS.SEARCH_FIELD.value;
-  constructedURL = helpers.CONSTRUCT_URL_PART(searchFilterInput, currentSearch);
+  constructedURL = HELPERS.CONSTRUCT_URL_PART(searchFilterInput, currentSearch);
   loadSearchResults(CONSTANTS.PARENT_ELEMENT, startingPoint, limit);
 }
-
-CONSTANTS.SEARCH_FILTER.addEventListener("input", function (ev) {
-  ev.preventDefault();
-  searchFilterInput = ev.target.value;
-  console.log(searchFilterInput);
-});
-
-// Event listener au clic et à la touche entrée pour initialiser la première recherche
-CONSTANTS.SEARCH_BUTTON.addEventListener("click", startSearchHandler);
-CONSTANTS.SEARCH_FIELD.addEventListener("keypress", function (ev) {
-  if (ev.key === "Enter") {
-    startSearchHandler();
-  }
-});
-
-CONSTANTS.SEARCH_FILTER.addEventListener("keypress", function (ev) {
-  if (ev.key === "Enter") {
-    startSearchHandler();
-  }
-});
-
-CONSTANTS.NEW_SEARCH.addEventListener("click", () => {
-  helpers.INIT();
-  document.removeEventListener("scroll", scrollLoad);
-});
-// J'initialise (ou réinitialise) ma recherche en mettant l'offset (startingPoint) à 0, en relançant le compteur de résultats (affichage uniquement) et en vidant la grille de résultat
-
-// export const loadDetail = async function (id) {
-//   try {
-//     const data = await GET_JSON(`${API_URL}${id}`);
-
-//     const { recipe } = data.data;
-//     state.recipe = {
-//       id: recipe.id,
-//       title: recipe.title,
-//       publisher: recipe.publisher,
-//       sourceUrl: recipe.source_url,
-//       image: recipe.image_url,
-//       servings: recipe.servings,
-//       cookingTime: recipe.cooking_time,
-//       ingredients: recipe.ingredients,
-//     };
-//   } catch (err) {
-//     throw err;
-//   }
-// };
-
-// http://musicbrainz.org/ws/2/recording/?query=artistname:%22daft%20punk%22&fmt=json
 
 const loadSearchResults = async function (parent, start, maxResults) {
   document.removeEventListener("scroll", scrollLoad);
@@ -100,7 +76,7 @@ const loadSearchResults = async function (parent, start, maxResults) {
       ></path>
     </svg>`;
 
-    const data = await helpers.GET_JSON(
+    const data = await HELPERS.GET_JSON(
       encodeURI(
         `${CONSTANTS.API_URL}recording/?query=${constructedURL}&fmt=json&limit=${maxResults}&offset=${start}`
       )
@@ -115,16 +91,16 @@ const loadSearchResults = async function (parent, start, maxResults) {
       return {
         rank: idNbr++,
         recordingID: rec.id,
-        title: helpers.SHORTEN_STRING(rec.title, 50),
+        title: HELPERS.SHORTEN_STRING(rec.title, 50),
         artist:
           rec["artist-credit"].length === 1
-            ? helpers.SHORTEN_STRING(rec["artist-credit"][0].name, 50)
-            : helpers.SHORTEN_STRING(rec["artist-credit"][0].name, 50) +
+            ? HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50)
+            : HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50) +
               '<span class="italic"> & </span>' +
-              helpers.SHORTEN_STRING(rec["artist-credit"][1].name, 50),
+              HELPERS.SHORTEN_STRING(rec["artist-credit"][1].name, 50),
         artistID: rec["artist-credit"][0].artist.id,
         mainRelease: rec.hasOwnProperty("releases")
-          ? helpers.SHORTEN_STRING(rec.releases[0].title, 80)
+          ? HELPERS.SHORTEN_STRING(rec.releases[0].title, 80)
           : '<span class="font-bold italic text-red-800">No information on releases</span>',
         mainRelaseID: rec.hasOwnProperty("releases")
           ? rec["releases"][0].id
@@ -150,7 +126,7 @@ const loadSearchResults = async function (parent, start, maxResults) {
       let releaseDetailBtnMarkup = "";
       if (result.mainRelaseID) {
         releaseDetailBtnMarkup = `<button type="button" id=${result.mainRelaseID}
-            class="view-track-details w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+            class="view-release-details w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
             <i class="fas fa-compact-disc"></i>
         </button>`;
       }
@@ -180,23 +156,13 @@ const loadSearchResults = async function (parent, start, maxResults) {
     <p class="font-bold italic text-center text-blue-800">No more results to show!</p>
   `;
     }
+
     document.addEventListener("scroll", scrollLoad);
 
-    const trackDetailsBtn = document.querySelectorAll(".view-track-details");
-    trackDetailsBtn.forEach(function (trackDetailBtn) {
-      trackDetailBtn.addEventListener("click", function () {
-        const trackToShow = trackDetailBtn.id;
-        controlTrackDetail(trackToShow);
-      });
-    });
+    createListener("track", controlTrackDetail);
+    createListener("artist", controlArtistDetail);
+    createListener("release", controlReleaseDetail);
 
-    const artistDetailsBtn = document.querySelectorAll(".view-artist-details");
-    artistDetailsBtn.forEach(function (artistDetailsBtn) {
-      artistDetailsBtn.addEventListener("click", function () {
-        const artistToShow = artistDetailsBtn.id;
-        controlArtistDetail(artistToShow);
-      });
-    });
     // return idNbr;
   } catch (err) {
     console.log(err);
@@ -204,47 +170,18 @@ const loadSearchResults = async function (parent, start, maxResults) {
   }
 };
 
-//below taken from http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
-function getScrollXY() {
-  var scrOfX = 0,
-    scrOfY = 0;
-  if (typeof window.pageYOffset == "number") {
-    //Netscape compliant
-    scrOfY = window.pageYOffset;
-    scrOfX = window.pageXOffset;
-  } else if (
-    document.body &&
-    (document.body.scrollLeft || document.body.scrollTop)
-  ) {
-    //DOM compliant
-    scrOfY = document.body.scrollTop;
-    scrOfX = document.body.scrollLeft;
-  } else if (
-    document.documentElement &&
-    (document.documentElement.scrollLeft || document.documentElement.scrollTop)
-  ) {
-    //IE6 standards compliant mode
-    scrOfY = document.documentElement.scrollTop;
-    scrOfX = document.documentElement.scrollLeft;
-  }
-  return [scrOfX, scrOfY];
-}
-
-//taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
-function getDocHeight() {
-  var D = document;
-  return Math.max(
-    D.body.scrollHeight,
-    D.documentElement.scrollHeight,
-    D.body.offsetHeight,
-    D.documentElement.offsetHeight,
-    D.body.clientHeight,
-    D.documentElement.clientHeight
-  );
+function createListener(itemType, controlFunction) {
+  const selectButtons = document.querySelectorAll(`.view-${itemType}-details`);
+  selectButtons.forEach(function (selectButton) {
+    selectButton.addEventListener("click", function () {
+      const itemToShow = selectButton.id;
+      controlFunction(itemToShow);
+    });
+  });
 }
 
 function scrollLoad() {
-  if (getDocHeight() == getScrollXY()[1] + window.innerHeight) {
+  if (HELPERS.GETDOCHEIGHT() == HELPERS.GETSCROLLXY()[1] + window.innerHeight) {
     if (startingPoint >= totalResults) {
       CONSTANTS.RESULT_MESSAGE.innerHTML = `
         <p class="font-bold italic text-center text-blue-800">No more results to show!</p>
@@ -254,22 +191,6 @@ function scrollLoad() {
     }
   }
 }
-/*
-const controlSearchResults = async function (searchRequest) {
-  try {
-    SearchView.clear();
-    SearchView.renderSpinner();
-    await searchModel.loadSearchResults(searchRequest);
-    SearchView.renderResultCount();
-    SearchView.renderSearchResults();
-    SearchView.renderEndResults();
-  } catch (err) {
-    console.log(err);
-  }
-};
-*/
-
-//https://musicbrainz.org/ws/2/recording/bd44e72c-efaf-47c3-b284-5da787d02583?inc=genres+artists+ratings&fmt=json
 
 const controlTrackDetail = async function (trackID) {
   try {
@@ -277,7 +198,7 @@ const controlTrackDetail = async function (trackID) {
 
     TrackView.renderSpinner();
     await model.loadTrackDetail(trackID);
-    TrackView.render(model.details.trackDetails);
+    TrackView.render(model.state.trackDetails);
   } catch (err) {
     console.log(err);
   }
@@ -288,12 +209,45 @@ const controlArtistDetail = async function (artistID) {
     CoverView.clear();
     ArtistView.renderSpinner();
     await model.loadArtistDetail(artistID);
-    ArtistView.render(model.details.artistDetails);
-    console.log(model.details.artistDetails);
+    ArtistView.render(model.state.artistDetails);
+    console.log(model.state.artistDetails);
   } catch (err) {
     console.log(err);
   }
 };
+
+const controlReleaseDetail = async function (releaseID) {
+  try {
+    CoverView.clear();
+    ReleaseView.renderSpinner();
+    await model.loadReleaseDetail(releaseID);
+    console.log(model.state.releaseDetails);
+    ReleaseView.render(model.state.releaseDetails);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/** Je lance la fonction ci-dessus au clic sur le bouton SEARCH
+ * Mais aussi si on presse entrée dans le champs de recherche, ou pendant la sélection d'un filtre (je sais pas pourquoi mais c'était marqué dans la consigne)
+ */
+CONSTANTS.SEARCH_BUTTON.addEventListener("click", startSearchHandler);
+CONSTANTS.SEARCH_FIELD.addEventListener("keypress", function (ev) {
+  if (ev.key === "Enter") {
+    startSearchHandler();
+  }
+});
+
+CONSTANTS.SEARCH_FILTER.addEventListener("keypress", function (ev) {
+  if (ev.key === "Enter") {
+    startSearchHandler();
+  }
+});
+
+CONSTANTS.NEW_SEARCH.addEventListener("click", () => {
+  HELPERS.INIT();
+  document.removeEventListener("scroll", scrollLoad);
+});
 
 CONSTANTS.CLOSE_MODAL.addEventListener("click", function () {
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");

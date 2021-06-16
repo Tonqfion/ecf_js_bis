@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+<!--Bienvenue ! Pas trop de commentaires. J'ai utilisé Tailwind "pour tester", ça marche bien, c'est cool. J'ai pompé un component (la fenêtre modale) pour m'aider et aller plus vite ! C'est génial, ça fonctionne, je suis super content.-->
 
 <head>
 	<meta charset="UTF-8" />
@@ -33,38 +34,17 @@
 			</div>
 		</div>
 	</header>
-	<!-- This example requires Tailwind CSS v2.0+ -->
-
+	<!-- A partir d'ici c'est la fenêtre modale, en tout cas tous les éléments qui permettent de la manipuler -->
 	<div id="modal-details" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title"
 		role="dialog" aria-modal="true">
 		<div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-			<!--
-    Background overlay, show/hide based on modal state.
 
-    Entering: "ease-out duration-300"
-      From: "opacity-0"
-      To: "opacity-100"
-    Leaving: "ease-in duration-200"
-      From: "opacity-100"
-      To: "opacity-0"
-  -->
 			<div id="modal-background" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
 				aria-hidden="true">
 			</div>
 
-			<!-- This element is to trick the browser into centering the modal contents. -->
 			<span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-			<!--
-    Modal panel, show/hide based on modal state.
-
-    Entering: "ease-out duration-300"
-      From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-      To: "opacity-100 translate-y-0 sm:scale-100"
-    Leaving: "ease-in duration-200"
-      From: "opacity-100 translate-y-0 sm:scale-100"
-      To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-  -->
 			<div
 				class="max-w-4xl inline-block align-bottom bg-white rounded-lg text-left overflow-x-hidden shadow-xl transform transition-all lg:my-16 sm:my-8 sm:align-middle w-full">
 				<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 w-full">

@@ -38,12 +38,12 @@ class TrackView extends view {
   }
 
   generateStars(rating) {
-    const nbrRating = Math.round(Number(rating));
+    const nbrRating = Math.round(Number(rating) * 2);
     const markUp = [];
     for (let i = 1; i <= nbrRating; i++) {
       markUp.push(`<i class="fas fa-star"></i>`);
     }
-    for (let i = nbrRating; i < 5; i++) {
+    for (let i = nbrRating; i < 10; i++) {
       markUp.push(`<i class="far fa-star"></i>`);
     }
     return markUp;
