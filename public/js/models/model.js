@@ -79,13 +79,16 @@ export const loadTrackDetail = async function (id) {
      * Du coup, j'aurai plein de questions !
      */
 
-    /* Je vérifie que la propriété où j'ai enregistrée mes ID est un tableau (sinon, c'est une string car aucune release n'a été renseigné pour cette track) et si oui, je fais un map pour créer un tableau d'URL pour aller fetch mes covers de l'ensemble des releases */
+    /* Je vérifie que la propriété où j'ai enregistrée mes ID est un tableau (sinon, c'est une string "no-release") et si oui, je fais un map pour créer un tableau d'URL pour aller fetch mes covers de l'ensemble des releases */
     if (Array.isArray(state.trackDetails.trackReleasesIdArray)) {
       state.coverUrlArray = state.trackDetails.trackReleasesIdArray.map((id) =>
         encodeURI(`${CONSTANTS.COVER_API_URL}${id}`)
       );
     }
 
+    /**
+     *
+     */
     if (state.coverUrlArray.length > 0) {
       Promise.allSettled(
         state.coverUrlArray.map((url) => fetch(url).then((res) => res.json()))
