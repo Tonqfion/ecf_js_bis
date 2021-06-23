@@ -7,6 +7,7 @@ import TrackView from "./view/trackView.js";
 import CoverView from "./view/coverView.js";
 import ArtistView from "./view/artistView.js";
 import ReleaseView from "./view/releaseView.js";
+import trackView from "./view/trackView.js";
 
 /** Jusque la ligne XXX, j'avais pas pensé à tester un embryon de MVC.
  * C'est pour ça que plein de trucs qui devraient pas se trouver sur le fichier controller. Mais ça devient mieux après.
@@ -199,6 +200,7 @@ const controlTrackDetail = async function (trackID) {
     TrackView.renderSpinner();
     await model.loadTrackDetail(trackID);
     TrackView.render(model.state.trackDetails);
+    console.log(model.state.trackDetails);
   } catch (err) {
     console.log(err);
   }
@@ -262,3 +264,22 @@ document.addEventListener("keydown", function (ev) {
 document.getElementById("modal-background").addEventListener("click", () => {
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");
 });
+
+const controlAddBookmark = function () {
+  if (!model.state.trackDetails.trackBookmarked) {
+    model.addBookmark(model.state.trackDetails);
+    console.log(model.state.trackDetails);
+    trackView.updateTrackView(model.state.trackDetails);
+    console.log(model.state.bookMarks);
+  } else {
+    model.deleteBookmark(model.state.trackDetails.trackID);
+    trackView.updateTrackView(model.state.trackDetails);
+    console.log(model.state.bookMarks);
+  }
+};
+
+function initHandler() {
+  trackView.addHandlerAddBookmark(controlAddBookmark);
+}
+
+initHandler();

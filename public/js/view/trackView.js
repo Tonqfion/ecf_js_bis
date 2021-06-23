@@ -2,9 +2,12 @@ import view from "./view.js";
 
 class TrackView extends view {
   generateMarkup() {
-    return `<h2 class="text-3xl leading-6 font-medium text-gray-900" id="modal-title">
+    return `<h2 class="inline text-3xl leading-6 font-medium text-gray-900" id="modal-title">
     ${this.data.trackTitle}
-  </h2>
+  </h2><button type="button" id="control-bookmark"
+  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+  ${this.data.trackBookmarked ? "Delete from Bookmark" : "Add to Bookmark"}
+</button>
   <div class="mt-2">
   <h3 class="mt-2 text-xl text-gray-900">First release date</h3>
   <p class="border-b-2 pb-2">
@@ -47,6 +50,28 @@ class TrackView extends view {
       markUp.push(`<i class="far fa-star"></i>`);
     }
     return markUp;
+  }
+
+  addHandlerAddBookmark(handler) {
+    this.parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest("#control-bookmark");
+      if (!btn) return;
+      handler();
+    });
+  }
+
+  updateTrackView(data) {
+    this.data = data;
+    const newMarkup = this.generateMarkup();
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll("*"));
+    const curElements = Array.from(this.parentElement.querySelectorAll("*"));
+    newElements.forEach((newEl, i) => {
+      const curEl = curElements[i];
+      if (!newEl.isEqualNode(curEl) && newEl.firstChild.nodeValue !== "") {
+        curEl.textContent = newEl.textContent;
+      }
+    });
   }
 }
 

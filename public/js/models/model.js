@@ -73,7 +73,11 @@ export const loadTrackDetail = async function (id) {
         ? Math.round(Number(trackData.rating.value))
         : '<span class="italic text-red-800">No rating yet for this track</span>',
     };
-
+    if (state.bookMarks.some((bookMark) => bookMark.trackID === id)) {
+      state.trackDetails.trackBookmarked = true;
+    } else {
+      state.trackDetails.trackBookmarked = false;
+    }
     /** Hop, j'ai mes données de base, maintenant, je dois m'occuper de mes covers.
      * C'est là où je fais une entorse au MVC car j'utilise CoverView, mais je ne suis pas parvenu à gérer un affichage des covers APRES la récupération des données, sinon en mettant mes requêtes AJAX dans la fonction loadTrackDetails dans laquelle on se trouve.
      * Du coup, j'aurai plein de questions !
@@ -200,4 +204,15 @@ export const loadReleaseDetail = async function (id) {
   } catch (err) {
     throw err;
   }
+};
+
+export const addBookmark = function (track) {
+  state.bookMarks.push(track);
+  state.trackDetails.trackBookmarked = true;
+};
+
+export const deleteBookmark = function (id) {
+  const index = state.bookMarks.findIndex((el) => el.trackID === id);
+  state.bookMarks.splice(index, 1);
+  state.trackDetails.trackBookmarked = false;
 };
