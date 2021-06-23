@@ -7,7 +7,8 @@ import TrackView from "./view/trackView.js";
 import CoverView from "./view/coverView.js";
 import ArtistView from "./view/artistView.js";
 import ReleaseView from "./view/releaseView.js";
-import trackView from "./view/trackView.js";
+import BookmarkView from "./view/bookmarkView.js";
+import bookmarkView from "./view/bookmarkView.js";
 
 /** Jusque la ligne XXX, j'avais pas pensé à tester un embryon de MVC.
  * C'est pour ça que plein de trucs qui devraient pas se trouver sur le fichier controller. Mais ça devient mieux après.
@@ -196,7 +197,6 @@ function scrollLoad() {
 const controlTrackDetail = async function (trackID) {
   try {
     CoverView.clear();
-
     TrackView.renderSpinner();
     await model.loadTrackDetail(trackID);
     TrackView.render(model.state.trackDetails);
@@ -266,20 +266,28 @@ document.getElementById("modal-background").addEventListener("click", () => {
 });
 
 const controlAddBookmark = function () {
+  //1) Ajouter ou supprimer des bookmarks
   if (!model.state.trackDetails.trackBookmarked) {
     model.addBookmark(model.state.trackDetails);
-    console.log(model.state.trackDetails);
-    trackView.updateTrackView(model.state.trackDetails);
-    console.log(model.state.bookMarks);
   } else {
     model.deleteBookmark(model.state.trackDetails.trackID);
-    trackView.updateTrackView(model.state.trackDetails);
-    console.log(model.state.bookMarks);
   }
+  //2) Update l'affichage des boutons sur la track qu'on affiche quand on l'ajoute / la supprimer des bookmarks
+  TrackView.updateTrackView(model.state.trackDetails);
+
+  //3) Render Bookmarks
+  BookmarkView.render(model.state.bookMarks);
+  createListener("bookmark", controlTrackDetail);
+};
+
+const controlBookmarks = function () {
+  BookmarkView.render(model.state.bookMarks);
+  createListener("bookmark", controlTrackDetail);
 };
 
 function initHandler() {
-  trackView.addHandlerAddBookmark(controlAddBookmark);
+  BookmarkView.addHandlerRenderOnPageLoad(controlBookmarks);
+  TrackView.addHandlerAddBookmark(controlAddBookmark);
 }
 
 initHandler();

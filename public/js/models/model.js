@@ -206,13 +206,29 @@ export const loadReleaseDetail = async function (id) {
   }
 };
 
+const persistBookmark = function () {
+  localStorage.setItem("bookmarks", JSON.stringify(state.bookMarks));
+};
+
 export const addBookmark = function (track) {
   state.bookMarks.push(track);
   state.trackDetails.trackBookmarked = true;
+  persistBookmark();
 };
 
 export const deleteBookmark = function (id) {
   const index = state.bookMarks.findIndex((el) => el.trackID === id);
   state.bookMarks.splice(index, 1);
   state.trackDetails.trackBookmarked = false;
+  persistBookmark();
 };
+
+const init = function () {
+  const storage = localStorage.getItem("bookmarks");
+  if (storage) {
+    state.bookMarks = JSON.parse(storage);
+    console.log(state.bookMarks);
+  }
+};
+
+init();

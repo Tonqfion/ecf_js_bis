@@ -4,9 +4,12 @@ class TrackView extends view {
   generateMarkup() {
     return `<h2 class="inline text-3xl leading-6 font-medium text-gray-900" id="modal-title">
     ${this.data.trackTitle}
-  </h2><button type="button" id="control-bookmark"
-  class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
-  ${this.data.trackBookmarked ? "Delete from Bookmark" : "Add to Bookmark"}
+  </h2><i id="control-bookmark-icon" class="${
+    this.data.trackBookmarked ? "fas" : "far"
+  } fa-bookmark ml-4 py-2 px-3 text-red-700 text-xl border-2 border-red-700 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"></i>
+  <button type="button" id="control-bookmark-text"
+  class="w-full inline-flex justify-center items-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 ml-1 sm:w-auto sm:text-sm">
+  ${this.data.trackBookmarked ? `Delete from Bookmark` : `Add to Bookmark`}
 </button>
   <div class="mt-2">
   <h3 class="mt-2 text-xl text-gray-900">First release date</h3>
@@ -54,8 +57,13 @@ class TrackView extends view {
 
   addHandlerAddBookmark(handler) {
     this.parentElement.addEventListener("click", function (e) {
-      const btn = e.target.closest("#control-bookmark");
-      if (!btn) return;
+      const btnText = e.target.closest("#control-bookmark-text");
+      if (!btnText) return;
+      handler();
+    });
+    this.parentElement.addEventListener("click", function (e) {
+      const btnIcon = e.target.closest("#control-bookmark-icon");
+      if (!btnIcon) return;
       handler();
     });
   }
@@ -68,8 +76,14 @@ class TrackView extends view {
     const curElements = Array.from(this.parentElement.querySelectorAll("*"));
     newElements.forEach((newEl, i) => {
       const curEl = curElements[i];
-      if (!newEl.isEqualNode(curEl) && newEl.firstChild.nodeValue !== "") {
+      if (!newEl.isEqualNode(curEl) && newEl.firstChild?.nodeValue !== "") {
         curEl.textContent = newEl.textContent;
+      }
+
+      if (!newEl.isEqualNode(curEl)) {
+        Array.from(newEl.attributes).forEach((attr) =>
+          curEl.setAttribute(attr.name, attr.value)
+        );
       }
     });
   }
