@@ -22,4 +22,5 @@ class ReleaseView extends View {
   }
 }
 
+// J'exporte une instance par défaut pour le controller
 export default new ReleaseView();

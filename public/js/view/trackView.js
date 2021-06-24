@@ -89,4 +89,5 @@ class TrackView extends view {
   }
 }
 
+// J'exporte une instance par défaut pour le controller
 export default new TrackView();

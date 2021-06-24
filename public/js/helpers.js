@@ -1,5 +1,10 @@
+// Regarder Controller.js en premier !
+// Ci-dessous, toutes les fonctions helpers
+
+// J'importe ce dont j'ai besoin
 import { CONSTANTS } from "./config.js";
 
+// je crée une fonction timeout, qui retourne une promesse, rejetée au bout de XX secondes (dans mon cas 10, cf config.js)
 const timeout = function (s) {
   return new Promise(function (_, reject) {
     setTimeout(function () {
@@ -8,6 +13,7 @@ const timeout = function (s) {
   });
 };
 
+// ma fonction de récupération des données depuis l'API, qui est une course entre la fonction timeout, et la résolution du fetch d'une URL. Si le fetch des données "gagne", le résultatt de la promesse
 export const GET_JSON = async function (url) {
   try {
     const res = await Promise.race([
@@ -23,6 +29,7 @@ export const GET_JSON = async function (url) {
   }
 };
 
+// Une petite fonction pour raccourcir une chaîne de caractère
 export function SHORTEN_STRING(string, maxLength) {
   if (string.length > maxLength) {
     return `${string.substring(0, maxLength - 3)}...`;
@@ -31,6 +38,7 @@ export function SHORTEN_STRING(string, maxLength) {
   }
 }
 
+// Fonction pour construire une partie de l'URL de la requête de recherche. Pour le filtre "Everything", j'ai choisi de chercher tous les termes en vrac
 export function CONSTRUCT_URL_PART(searchType, query) {
   if (searchType === "artist-opt") {
     return `artist:"${query}" OR artistname:"${query}"`;
@@ -43,12 +51,14 @@ export function CONSTRUCT_URL_PART(searchType, query) {
   }
 }
 
+// Fonction de conversion des millisecondes en minutes / secondes (pour la durée de la piste)
 export function CONVERT_MILLIS_TO_MINS_SECONDS(tracklength) {
   let minutes = Math.floor(tracklength / 60000);
   let seconds = ((tracklength % 60000) / 1000).toFixed(0);
   return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 }
 
+// Fonction d'initiation de l'appli (quand on charge l'appli ou que l'on fait une nouvelle recherche)
 export function INIT() {
   CONSTANTS.SEARCH_FIELD.focus();
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");
@@ -62,6 +72,7 @@ export function INIT() {
   CONSTANTS.HEADER.classList.remove("pt-16");
 }
 
+// Fonction qui supprime les doublons d'un tableau. Je l'ai choppé sur le net !
 export function REMOVEDUPLICATES(array) {
   var prims = { boolean: {}, number: {}, string: {} },
     objs = [];
@@ -76,6 +87,7 @@ export function REMOVEDUPLICATES(array) {
   });
 }
 
+// Fonction qui récupère la position au scroll (X et Y)
 //below taken from http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
 export function GETSCROLLXY() {
   var scrOfX = 0,
@@ -102,6 +114,7 @@ export function GETSCROLLXY() {
   return [scrOfX, scrOfY];
 }
 
+// Fonction qui récupère la taille de mon document
 //taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
 export function GETDOCHEIGHT() {
   var D = document;

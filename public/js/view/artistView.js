@@ -1,5 +1,6 @@
 import View from "./view.js";
 
+// Génération du markup pour l'affichage des détails d'un artist
 class ArtistView extends View {
   generateMarkup() {
     return `<h2 class="text-3xl leading-6 font-medium text-gray-900" id="modal-title">
@@ -10,7 +11,7 @@ class ArtistView extends View {
   <p class="border-b-2 pb-2">
   ${this.data.artistType}
   </p>
-  <h3 class="mt-2 text-xl text-gray-900">Track List</h3>
+  <h3 class="mt-2 text-xl text-gray-900">Start Date / End date</h3>
   <p class="border-b-2 pb-2">
   ${this.data.artistStartDate} / ${this.data.artistEndDate}
   </p>
@@ -22,4 +23,5 @@ class ArtistView extends View {
   }
 }
 
+// J'exporte une instance par défaut pour le controller
 export default new ArtistView();

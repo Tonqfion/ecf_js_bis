@@ -15,13 +15,13 @@ class BookmarkView extends View {
     }
   }
 
+  //
   addHandlerRenderOnPageLoad(handler) {
     window.addEventListener("load", handler);
   }
 
   generateUniqueMarkup(track) {
-    return `<li class="p-2 flex justify-between bg-red-400">
-    
+    return `<li class="p-2 flex justify-between bg-red-400">    
     <p>${SHORTEN_STRING(track.trackArtists, 40)} - ${SHORTEN_STRING(
       track.trackTitle,
       40
@@ -35,4 +35,5 @@ class BookmarkView extends View {
   }
 }
 
+// J'exporte une instance par défaut pour le controller
 export default new BookmarkView();
