@@ -50,7 +50,7 @@ export function CONSTRUCT_URL_PART(searchType, query) {
   } else {
     return `${query}`;
 
-    /*
+    /* Bon ça, c'était au début, je voulais faire un Rick-roll :D si tu mets rien dans la recherche, mais je me suis dit que ça pourrait être vu comme une solution de facilité, du coup je l'ai simplement géré dans le controller
     if (!query) {
       return 'recording:"Never gonna give you up" AND artist:"Rick Astley"';
     } else {
@@ -138,6 +138,7 @@ export function GETDOCHEIGHT() {
   );
 }
 
+// Comme j'utilise beaucoup de innerHTML et de insertAdjacentHTML (parce que c'est quand même vachement plus simple avec Tailwind ...), je m'assure de traiter les chaînes de caractères qui sont envoyées dans les requêtes par l'utilisateur, mais aussi de traiter les chaînes de caractères qui reviennent de MusicBrainz. C'est pas très propre et sans doute pas ultra performant, mais quand tu (Antho) m'a dit qu'il fallait aussi penser au fait qu'un super-hacker pourrait prendre la main sur ce qui était envoyé via l'API, c'était trop tard pour refaire tout mon code (ou en tout cas, ça m'aurait pris énormément de temps de refaire le tout et passer à des ajouts d'element / de classnames), j'ai donc choisi cette solution là ...
 export function ESCAPE_HTML(string) {
   let map = {
     "&": "&amp;",

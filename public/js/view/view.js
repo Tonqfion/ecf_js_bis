@@ -1,7 +1,6 @@
-// Ma view de base, qui inclue la méthode render (la même pour toutes les views), le clear, et le spinner !
-
 import { CONSTANTS } from "../config.js";
 
+// Ma view de base, qui inclue la méthode render (la même pour toutes les views), le clear, et le spinner !
 export default class View {
   modal = CONSTANTS.MODAL_WINDOW;
   parentElement = document.getElementById("details-content");

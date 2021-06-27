@@ -1,6 +1,7 @@
 import { SHORTEN_STRING } from "../helpers.js";
 import View from "./view.js";
 
+// Gestion de génération des markups pour l'affichage des bookmarks.
 class BookmarkView extends View {
   parentElement = document.getElementById("bookmarkList");
 
@@ -15,11 +16,6 @@ class BookmarkView extends View {
     }
   }
 
-  //
-  addHandlerRenderOnPageLoad(handler) {
-    window.addEventListener("load", handler);
-  }
-
   generateUniqueMarkup(track) {
     return `<li class="p-2 flex justify-between bg-red-400">    
     <p>${SHORTEN_STRING(track.trackArtists, 40)} - ${SHORTEN_STRING(
@@ -32,6 +28,11 @@ class BookmarkView extends View {
         <i class="fas fa-music"></i>
       </button>
     </li>`;
+  }
+
+  // J'ajoute un handler pour le chargement des bookmarks lors de l'ouverture de l'appli
+  addHandlerRenderOnPageLoad(handler) {
+    window.addEventListener("load", handler);
   }
 }
 

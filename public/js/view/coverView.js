@@ -3,7 +3,7 @@ import View from "./view.js";
 
 class CoverView extends View {
   parentElement = document.getElementById("covers-content");
-  // Le render est légèrement différent car il prend des erreurs supplémentaire par rapport à trackView et artistView. Les tracks existent forcément, mais les releases n'ont pas forcément de covers.
+  // Le render est légèrement différent car il prend des erreurs supplémentaires par rapport à trackView et artistView. Les tracks existent forcément, mais les releases n'ont pas forcément de covers, voire il peut ne pas y avoir de releases du tout.
   renderCovers(data) {
     this.data = data;
     let markup;
@@ -51,6 +51,7 @@ class CoverView extends View {
       `;
   }
 
+  // Le spinner ne s'affichant pas au même endroit lors du chargement des covers, je crée une autre méthode renderSpinner() qui surchage celle de la classe parente.
   renderSpinner() {
     const markup = `
     <h2 class="mt-16 text-3xl leading-6 font-medium text-gray-900 mb-8" id="modal-title">

@@ -1,3 +1,4 @@
+// Spotlight, une bibliothèque qui gère l'affichage de la modale lorsqu'on clique sur l'image d'une cover
 (function () {
   "use strict";
   var aa = document.createElement("style");

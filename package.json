@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "build": "postcss ./src/css/styles.css -o ./public/styles.css"
+    "build": "postcss ./src/css/styles.css -o ./public/styles.css",
+    "prod": "NODE_ENV=production postcss ./src/css/styles.css -o ./public/styles.css"
   },
   "keywords": [],
   "author": "",
@@ -15,7 +16,8 @@
     "tailwindcss": "^2.1.4"
   },
   "dependencies": {
+    "live-server": "^1.2.1",
     "postcss-cli": "^8.3.1",
-    "live-server": "^1.2.1"
+    "win-node-env": "^0.4.0"
   }
 }

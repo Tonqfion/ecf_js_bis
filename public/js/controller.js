@@ -256,6 +256,7 @@ const controlTrackDetail = async function (trackID) {
     // Je vide le conteneur des détails (via renderSpinner) et des covers au cas où ce ne soit pas le premier affichage de détails.
     CoverView.clear();
     TrackView.renderSpinner();
+    CoverView.renderSpinner();
 
     // Je charge les infos qui m'intéressent dans le model.trackDetails
     await model.loadTrackDetail(trackID);

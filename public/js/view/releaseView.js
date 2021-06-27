@@ -1,5 +1,6 @@
 import View from "./view.js";
 
+// Un markup spécifique pour l'affichage des détails de la release principale
 class ReleaseView extends View {
   generateMarkup() {
     return `<h2 class="text-3xl leading-6 font-medium text-gray-900" id="modal-title">
