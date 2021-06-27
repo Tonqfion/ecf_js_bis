@@ -1,7 +1,9 @@
+// La partie "Cover" de la modale.
 import View from "./view.js";
 
 class CoverView extends View {
   parentElement = document.getElementById("covers-content");
+  // Le render est légèrement différent car il prend des erreurs supplémentaire par rapport à trackView et artistView. Les tracks existent forcément, mais les releases n'ont pas forcément de covers.
   renderCovers(data) {
     this.data = data;
     let markup;

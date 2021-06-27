@@ -1,3 +1,5 @@
+// La trackview, où le markup est généré à partir du state.details.trackDetails
+
 import view from "./view.js";
 
 class TrackView extends view {
@@ -43,6 +45,7 @@ class TrackView extends view {
     </div>`;
   }
 
+  // La méthode de génération des étoiles (Je savais pas trop où trouver un truc avec des "demi étoiles", du coup je multiplie le score par deux et je note sur 10 étoiles ... #fainéant)
   generateStars(rating) {
     const nbrRating = Math.round(Number(rating) * 2);
     const markUp = [];
@@ -55,6 +58,7 @@ class TrackView extends view {
     return markUp;
   }
 
+  // Le handler pour l'ajout des bookmarks, les boutons n'étant pas crées au moment de la génération de la page, je devais trouver un moyen différent d'ajouter les eventListeners
   addHandlerAddBookmark(handler) {
     this.parentElement.addEventListener("click", function (e) {
       const btnText = e.target.closest("#control-bookmark-text");
@@ -68,6 +72,7 @@ class TrackView extends view {
     });
   }
 
+  // L'update de l'affichage de la modale lorsqu'on clic sur un bouton d'ajout / suppression des bookmarks, pour changer le texte et l'icône fontAwesome. Ca permet de comparer l'état du dom précédent, au nouveau, et de changer uniquement les parties qui ont été modifiés (mieux que de tout régénérer) au niveau du text ainsi que des attributs.
   updateTrackView(data) {
     this.data = data;
     const newMarkup = this.generateMarkup();

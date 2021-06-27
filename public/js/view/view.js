@@ -1,3 +1,5 @@
+// Ma view de base, qui inclue la méthode render (la même pour toutes les views), le clear, et le spinner !
+
 import { CONSTANTS } from "../config.js";
 
 export default class View {

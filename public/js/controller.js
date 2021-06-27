@@ -34,16 +34,13 @@ CONSTANTS.SEARCH_FILTER.addEventListener("input", function (ev) {
 });
 
 /** Je crée ma fonction qui se lance quand on commence une recherche
- * 1 - J'affiche le bouton pour commencer une nouvelle recherche (en haut en fixed) et je décale le header pour que l'on voit le logo
- * 2 - J'initialise mon offset à 0 et l'idNbr (qui affiche le "numéro" de la piste)
- * 3 - Je vide le parent element (le container des résultats)
- * 4 - J'enregistre la valeur dans le champs de recherche
- * 5 - J'enregistre une partie de la future URL à partir de ce qui se trouve dans le menu déroulant et du champs de recherche
- * 6 - Je lance la fonction de chargement des résultats
+ * 1 - J'initialise mon offset à 0 et l'idNbr (qui affiche le "numéro" de la piste)
+ * 2 - Je vide le parent element (le container des résultats)
+ * 3 - J'enregistre la valeur dans le champs de recherche
+ * 4 - J'enregistre une partie de la future URL à partir de ce qui se trouve dans le menu déroulant et du champs de recherche
+ * 5 - Je lance la fonction de chargement des résultats
  */
 function startSearchHandler() {
-  CONSTANTS.NEW_SEARCH.classList.remove("hidden");
-  CONSTANTS.HEADER.classList.add("pt-16");
   offSet = 0;
   idNbr = 1;
   CONSTANTS.PARENT_ELEMENT.innerHTML = "";
@@ -53,12 +50,24 @@ function startSearchHandler() {
 }
 
 // Fonction de chargement des résultats Elle se lance : soit au clic, soit au "scroll"
-
 const loadSearchResults = async function (parent, start, maxResults) {
   // Je supprime l'eventlistener au scroll, pour éviter de le lancer une seconde fois avant que les résultats aient chargés
   document.removeEventListener("scroll", scrollLoad);
   try {
-    // Je vide le cotenu du message indiquant les informations sur la recherche, et en attendant que ces derniers s'affichent, je fais apparaître un spinner
+    // D'abord je vérifie que l'utilisateur a bien tapé quelque chose dans le champs de recherche, sinon, j'ôte l'affichage du bouton "New Search", ainsi que l'affichage du nombre de résultats (s'il a déjà effectué une recherche avant)
+    if (!currentSearch) {
+      CONSTANTS.RESULT_COUNT_MESSAGE.classList.add("hidden");
+      CONSTANTS.NEW_SEARCH.classList.add("hidden");
+      CONSTANTS.HEADER.classList.remove("pt-16");
+      CONSTANTS.RESULT_MESSAGE.innerHTML = "";
+      CONSTANTS.RESULT_MESSAGE.innerHTML = `<p class="font-bold italic text-center text-blue-800">I think you forgot to type something in the search field... Try again!</p>`;
+      return;
+    }
+
+    //
+    CONSTANTS.NEW_SEARCH.classList.remove("hidden");
+    CONSTANTS.HEADER.classList.add("pt-16");
+    // Sinon, je vide le cotenu du message indiquant les informations sur la recherche, et en attendant que ces derniers s'affichent, je fais apparaître un spinner
     CONSTANTS.RESULT_MESSAGE.innerHTML = "";
     CONSTANTS.RESULT_MESSAGE.innerHTML = `<svg
       class="animate-spin ml-1 mr-3 h-5 w-5 text-blue-800"
@@ -89,7 +98,7 @@ const loadSearchResults = async function (parent, start, maxResults) {
     );
 
     // Une fois les promesses résolues, j'affiche le nombre de résultats
-    totalResults = data.count;
+    totalResults = typeof data.count === "number" ? data.count : "";
     CONSTANTS.RESULT_COUNT_MESSAGE.classList.remove("hidden");
     CONSTANTS.RESULT_COUNT_MESSAGE.classList.add("flex");
     CONSTANTS.RESULT_COUNT_MESSAGE.innerHTML = `<p class="font-bold italic text-center text-blue-800">
@@ -100,23 +109,32 @@ const loadSearchResults = async function (parent, start, maxResults) {
     searchResults = data.recordings.map((rec) => {
       return {
         rank: idNbr++,
-        recordingID: rec.id,
-        title: HELPERS.SHORTEN_STRING(rec.title, 50),
+        recordingID: HELPERS.ESCAPE_HTML(rec.id),
+        title: HELPERS.ESCAPE_HTML(HELPERS.SHORTEN_STRING(rec.title, 50)),
+
         // Selon qu'il y ait un artiste ou plus, j'affiche au moins un artiste, sinon je concatène avec le nom du second (et désolé s'il y en a plus ...)
         artist:
           rec["artist-credit"].length === 1
-            ? HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50)
-            : HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50) +
+            ? HELPERS.ESCAPE_HTML(
+                HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50)
+              )
+            : HELPERS.ESCAPE_HTML(
+                HELPERS.SHORTEN_STRING(rec["artist-credit"][0].name, 50)
+              ) +
               '<span class="italic"> & </span>' +
-              HELPERS.SHORTEN_STRING(rec["artist-credit"][1].name, 50),
-        artistID: rec["artist-credit"][0].artist.id,
+              HELPERS.ESCAPE_HTML(
+                HELPERS.SHORTEN_STRING(rec["artist-credit"][1].name, 50)
+              ),
+        artistID: HELPERS.ESCAPE_HTML(rec["artist-credit"][0].artist.id),
 
         // Parfois, un titre n'a pas de releases, dans ce cas, j'affiche un texte différent !
         mainRelease: rec.hasOwnProperty("releases")
-          ? HELPERS.SHORTEN_STRING(rec.releases[0].title, 80)
+          ? HELPERS.ESCAPE_HTML(
+              HELPERS.SHORTEN_STRING(rec.releases[0].title, 80)
+            )
           : '<span class="font-bold italic text-red-800">No information on releases</span>',
         mainRelaseID: rec.hasOwnProperty("releases")
-          ? rec["releases"][0].id
+          ? HELPERS.ESCAPE_HTML(rec["releases"][0].id)
           : "",
       };
     });
@@ -315,7 +333,7 @@ CONSTANTS.NEW_SEARCH.addEventListener("click", () => {
   document.removeEventListener("scroll", scrollLoad);
 });
 
-// Et enfin 3 méthodes pour fermer la modale : en cliquant sur le bouton "back to result", en faisant Echap, ou en cliquant sur le background de la modale
+// Et enfin 3 manières de fermer la modale : en cliquant sur le bouton "back to result", en faisant Echap, ou en cliquant sur le background de la modale
 CONSTANTS.CLOSE_MODAL.addEventListener("click", function () {
   CONSTANTS.MODAL_WINDOW.classList.add("hidden");
 });

@@ -13,7 +13,7 @@ const timeout = function (s) {
   });
 };
 
-// ma fonction de récupération des données depuis l'API, qui est une course entre la fonction timeout, et la résolution du fetch d'une URL. Si le fetch des données "gagne", le résultatt de la promesse
+// ma fonction de récupération des données depuis l'API, qui est une course entre la fonction timeout, et la résolution du fetch d'une URL. Si le fetch des données "gagne", le résultat de la promesse est parser à son tour et
 export const GET_JSON = async function (url) {
   try {
     const res = await Promise.race([
@@ -40,6 +40,7 @@ export function SHORTEN_STRING(string, maxLength) {
 
 // Fonction pour construire une partie de l'URL de la requête de recherche. Pour le filtre "Everything", j'ai choisi de chercher tous les termes en vrac
 export function CONSTRUCT_URL_PART(searchType, query) {
+  query = ESCAPE_HTML(query);
   if (searchType === "artist-opt") {
     return `artist:"${query}" OR artistname:"${query}"`;
   } else if (searchType === "track-opt") {
@@ -48,6 +49,15 @@ export function CONSTRUCT_URL_PART(searchType, query) {
     return `release:"${query}"`;
   } else {
     return `${query}`;
+
+    /*
+    if (!query) {
+      return 'recording:"Never gonna give you up" AND artist:"Rick Astley"';
+    } else {
+      return `"${query}"`;
+    }
+
+*/
   }
 }
 
@@ -73,7 +83,7 @@ export function INIT() {
 }
 
 // Fonction qui supprime les doublons d'un tableau. Je l'ai choppé sur le net !
-export function REMOVEDUPLICATES(array) {
+export function REMOVE_DUPLICATES(array) {
   var prims = { boolean: {}, number: {}, string: {} },
     objs = [];
 
@@ -126,4 +136,17 @@ export function GETDOCHEIGHT() {
     D.body.clientHeight,
     D.documentElement.clientHeight
   );
+}
+
+export function ESCAPE_HTML(string) {
+  let map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;",
+  };
+  return string.replace(/[&<>"']/g, function (m) {
+    return map[m];
+  });
 }
